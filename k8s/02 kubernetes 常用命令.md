@@ -1,4 +1,12 @@
 # 常用命令
+### 集群信息
+```
+# kubectl cluster-info
+Kubernetes control plane is running at https://lb.kubesphere.local:6443
+CoreDNS is running at https://lb.kubesphere.local:6443/api/v1/namespaces/kube-system/services/coredns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
 ### 获取节点基本信息
 ```
 # kubectl get nodes
