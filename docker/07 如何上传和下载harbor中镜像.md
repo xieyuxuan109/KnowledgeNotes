@@ -10,7 +10,7 @@ root@jasper:/home/jasper/harbor# cat /etc/docker/daemon.json
   "insecure-registries" : ["192.168.1.221:81"]
 }
 root@jasper:/home/jasper/harbor# systemctl daemon-reload
-root@jasper:/home/jasper/harbor# systemctl docker restart
+root@jasper:/home/jasper/harbor# systemctl restart docker
 ```
 #### 登录
 ```
