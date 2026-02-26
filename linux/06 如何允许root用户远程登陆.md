@@ -1,8 +1,6 @@
 ### 如何允许root用户远程登录
 #### 修改root用户密码
 ```
-sudo su
-passwd -u root
 sudo passwd root
 ```
 #### 编辑文件
@@ -14,7 +12,7 @@ vi sshd_config//找到PermitRootLogin 注释掉这一行
 ```
 #### 重启生效
 ```
-service sshd restart
+systemctl restart ssh
 ``` 
 #### 查看
 ```
