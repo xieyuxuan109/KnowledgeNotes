@@ -24,7 +24,7 @@ network:
       gateway4: 192.168.1.1
       dhcp4: false
       nameservers:
-        addresses: [114.114.114.114,8.8.8.8,192.169.1.1]
+        addresses: [114.114.114.114,8.8.8.8,192.168.1.1]
   version: 2
 ```
 
