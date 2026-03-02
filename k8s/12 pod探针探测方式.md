@@ -132,4 +132,5 @@ initialDelaySeconds: 60 #初始化时间
 timeoutSeconds: 2 #超时时间
 successThreshold: 1 #检测1次成功就表示成功
 failureThreshold: 2 # 检测失败两次就表示失败
+periodSeconds: 10#间隔时间
 ```

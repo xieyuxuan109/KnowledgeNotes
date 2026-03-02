@@ -1,6 +1,6 @@
 ## 简单创建deploy 
 ```
-kubectl create deploy 名字 --image=镜像名称
+kubectl create deploy 名字 --image=镜像名称 --replicas=3
 ```
 ## 获取基本配置文件
 ```

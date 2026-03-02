@@ -4,8 +4,10 @@
 ```
 ### 如何添加label
 ```
+metadata.label
 永久添加label
 修改组件的yaml配置文件，在metadata里面添加label
+kubectl edit pod <pod-name>
 临时添加label
 kubectl label po <资源名称> app=hello (-n 命名空间)
 如何临时修改label
@@ -13,6 +15,7 @@ kubectl label po <资源名称> app=hello2 (-n 命名空间) --overwrite
 ```
 ### 查看和匹配label
 ```
+spec.selector
 查看
 kubectl get po (-n 命名空间) --show-labels(查看labels)
 匹配
