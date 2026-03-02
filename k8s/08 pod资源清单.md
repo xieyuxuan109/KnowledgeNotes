@@ -2,94 +2,48 @@
 ## 简单创建pod
 ```
 kubectl create pod 名字 --image=镜像名称
+pod名称：Deployment名 - RS哈希 - Pod随机串
 ```
 ## 获取基本配置文件
 ```
-kubectl get deploy 名字 -o yaml
+kubectl get pod 名字 -o yaml
 ```
-```yaml
+```
+在 Kubernetes 资源清单里，apiVersion 表示 这个资源对象属于哪个 API 组和版本。
+apiVersion: v1
+apiVersion: apps/v1
+它们的区别主要在于：是否属于某个 API 组（group）。
+一、apiVersion: v1
+v1 表示它属于 核心 API 组（core group）。
+核心组是 Kubernetes 最基础的一组资源，没有 group 名字，所以直接写 v1。
+常见属于 v1 的资源：
+Pod
+Service
+ConfigMap
+Secret
+Namespace
+Node
+PersistentVolume
+PersistentVolumeClaim
+例如：
 apiVersion: v1
 kind: Pod
-metadata:
-  name: my-pod
-  namespace: default
-  labels:
-    app: my-app
-    version: v1
-  annotations:
-    description: "example pod"
-
-spec:
-  restartPolicy: Always
-
-  containers:
-  - name: main-container
-    image: nginx:1.27
-    imagePullPolicy: IfNotPresent
-
-    ports:
-    - name: http
-      containerPort: 80
-      protocol: TCP
-
-    env:
-    - name: ENV
-      value: "prod"
-
-    resources:
-      requests:
-        cpu: "100m"
-        memory: "128Mi"
-      limits:
-        cpu: "500m"
-        memory: "256Mi"
-
-    volumeMounts:
-    - name: data
-      mountPath: /data
-
-    livenessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 10
-      periodSeconds: 5
-
-    readinessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 5
-
-    securityContext:
-      runAsUser: 1000
-      allowPrivilegeEscalation: false
-
-  volumes:
-  - name: data
-    emptyDir: {}
-
-  nodeSelector:
-    disktype: ssd
-
-  tolerations:
-  - key: "key"
-    operator: "Exists"
-    effect: "NoSchedule"
-
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: kubernetes.io/os
-            operator: In
-            values:
-            - linux
+二、apiVersion: apps/v1
+apps/v1 表示：
+API 组：apps
+版本：v1
+这是扩展 API 组的一部分，用来管理控制器类型资源。
+属于 apps/v1 的资源：
+Deployment
+ReplicaSet
+StatefulSet
+DaemonSet
+例如：
+apiVersion: apps/v1
+kind: Deployment
 ```
-```
-示例
+```yaml
+#示例
 apiVersion: v1 #api文档版本
 kind: Pod #资源对象类型，也可以配置为Deployment StatefulSet 等对象
 metadata: #Pod相关元数据，用于描述Pod的数据
