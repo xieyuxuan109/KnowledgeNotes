@@ -1,5 +1,12 @@
 # Kubernetes Pod 通用模板
-
+## 简单创建pod
+```
+kubectl create pod 名字 --image=镜像名称
+```
+## 获取基本配置文件
+```
+kubectl get deploy 名字 -o yaml
+```
 ```yaml
 apiVersion: v1
 kind: Pod
