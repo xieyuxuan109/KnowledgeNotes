@@ -11,5 +11,5 @@ kubectl scale --replicas=3 deploy nginx-deploy
 暂停
 kubectl rollout pause deploy nginx-deploy
 恢复
-kubectl rollout pause resume nginx-deploy
+kubectl rollout resume nginx-deploy
 ```
