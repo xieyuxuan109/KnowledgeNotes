@@ -8,7 +8,8 @@ kubectl describe node k8s-node1
 ```
 ### 到问题节点查看问题
 ```
-systemctl status kubectl 
+# 检查节点上的核心服务
+sudo systemctl status kubelet
 ```
 ```
 journal -u kubectl //查看问题

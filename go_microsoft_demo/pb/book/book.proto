@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "demo/pb/book";
+package book;
+import "google/protobuf/timestamp.proto";
+import "book/price.proto";//从--proto-path往下写
+message Book {
+  string title=1;
+  Price price =2; //引用同文件不用
+  //引入其他文件定义的消息price.proto 同文件不用加前缀
+  google.protobuf.Timestamp data=4;
+}
+service BookService {
+  rpc Create(Book)returns(Book);
+}
+

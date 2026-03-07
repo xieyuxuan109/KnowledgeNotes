@@ -12,19 +12,21 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 ```
 #### 编辑文件
 ```
-sudo vim /etc/netplan/00-installer-config.yaml
+sudo vim /etc/netplan/50-cloud-init.yaml
 ```
 ```
-root@jasper:/home/jasper# cat /etc/netplan/00-installer-config.yaml
+root@jasper:/home/jasper# cat /etc/netplan/50-cloud-init.yaml
 # This is the network config written by 'subiquity'
 network:
   ethernets:
     ens33: 
-      addresses: [192.168.1.220/24]
-      gateway4: 192.168.1.1
+      addresses: [10.17.220.221/16]
+      routes:
+        - to: default
+          via: 10.17.0.1
       dhcp4: false
       nameservers:
-        addresses: [114.114.114.114,8.8.8.8,192.168.1.1]
+        addresses: [114.114.114.114,8.8.8.8,10.17.0.1]
   version: 2
 ```
 

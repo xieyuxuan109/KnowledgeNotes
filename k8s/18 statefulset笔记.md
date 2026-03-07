@@ -9,6 +9,7 @@ kubectl apply -f service.yaml
 示例：
 
 ```yaml
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,6 +20,43 @@ spec:
     app: nginx
   ports:
   - port: 80
+---
+apiVersion: apps/v1           # API版本，StatefulSet必须是 apps/v1
+kind: StatefulSet             # 资源类型
+metadata:
+  name: mysql                   # StatefulSet 名称
+  namespace: default          # 命名空间
+
+spec:
+  serviceName: mysql        # 必须关联一个 Headless Service
+  replicas: 3                 # Pod 副本数量
+  selector:                   # 标签选择器（必须和pod标签一致）
+    matchLabels:
+      app: mysql
+  template:                   # Pod模板
+    metadata:
+      labels:
+        app: mysql            # Pod标签
+    spec:
+      containers:
+      - name: mysql           # 容器名称
+        image: mysql:8.0     # 容器镜像
+        ports:
+        - containerPort: 3306   # 容器端口
+          name: http
+        volumeMounts:         # 挂载存储
+        - name: data
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:       # PVC模板（每个pod一个独立存储）
+  - metadata:
+      name: data              # 必须和 volumeMounts name一致
+    spec:
+      accessModes:
+      - ReadWriteOnce         # 访问模式
+      resources:
+        requests:
+          storage: 1Gi        # 存储大小
+
 ```
 
 查看 Service：

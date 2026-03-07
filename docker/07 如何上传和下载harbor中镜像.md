@@ -34,3 +34,6 @@ docker push local-168-182-110:80/library/goharbor/harbor-exporter:v2.5.6
 # docker pull ip:port/项目名/保存的镜像名(例如：xxx:version1)
 docker pull local-168-182-110:80/library/goharbor/harbor-exporter:v2.5.6
 ```
+```
+docker login nexus.jasper.com.cn:8082
+```
