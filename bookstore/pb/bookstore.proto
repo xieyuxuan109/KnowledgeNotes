@@ -1,0 +1,154 @@
+syntax = "proto3";
+
+// 定义当前文件使用的 Protocol Buffers 语法版本为 proto3
+// proto3 是 Google 推出的更简洁、更易用的版本，推荐用于新项目
+
+package bookstore;
+
+// 以下为代码生成选项，用于控制 Protobuf 编译器生成目标语言代码时的行为
+
+// 指定 Go 语言生成的包路径，便于在 Go 项目中导入
+option go_package = "bookstore/pb";
+
+// 设置为 true 表示为每个 message 生成独立的 .java 文件，而不是嵌套在外部类中
+option java_multiple_files = true;
+
+// 指定生成的 Java 外部类的类名
+option java_outer_classname = "BookstoreProto";
+
+// 指定生成的 Java 类的包名
+option java_package = "com.liwenzhou.blog.examples.bookstore";
+
+// 导入 Google API 的 HTTP 注解，用于将 gRPC 方法映射为 RESTful HTTP 接口
+import "google/api/annotations.proto";
+
+// 导入空消息类型，用于无请求或无响应的 RPC 方法
+import "google/protobuf/empty.proto";
+
+// 书店 API 的服务定义
+// 该服务用于管理“书架”和“图书”资源，每个书架可包含多个图书
+service Bookstore {
+
+  // 获取所有书架的列表
+  // 输入：空消息（无参数）
+  // 输出：ListShelvesResponse 消息（包含书架列表）
+  rpc ListShelves(google.protobuf.Empty) returns (ListShelvesResponse) {
+    // 使用 Google API 注解将此 RPC 方法映射为 HTTP GET 请求
+    // 映射路径为 /v1/shelves，客户端可通过 curl 或浏览器访问
+    option (google.api.http) = { get: "/v1/shelves" };
+  }
+
+  // 在书店中创建一个新的书架
+  // 输入：CreateShelfRequest 消息（包含书架信息，如主题）
+  // 输出：Shelf 消息（返回创建成功的书架对象）
+  rpc CreateShelf(CreateShelfRequest) returns (Shelf) {
+    // 使用 Google API 注解将此 RPC 方法映射为 HTTP POST 请求
+    // 映射路径为 /v1/shelves，客户端可通过 POST 请求提交 JSON 数据创建书架
+    // 示例：curl -d '{"theme":"Music"}' http://DOMAIN_NAME/v1/shelves
+    option (google.api.http) = {
+      post: "/v1/shelves"
+      body: "shelf"  // 指定请求体中包含的字段名，此处应为 CreateShelfRequest 中的 shelf 字段
+    };
+  }
+  // 获取指定书架的详细信息
+rpc GetShelf(GetShelfRequest) returns (Shelf) {
+    // 客户端示例：获取 ID 为 1 的书架
+    // curl http://DOMAIN_NAME/v1/shelves/1
+    option (google.api.http) = { get: "/v1/shelves/{shelf}" };
+}
+
+// 删除指定书架，包括书架上存储的所有图书
+rpc DeleteShelf(DeleteShelfRequest) returns (google.protobuf.Empty) {
+    // 客户端示例：删除 ID 为 2 的书架
+    // curl -X DELETE http://DOMAIN_NAME/v1/shelves/2
+    option (google.api.http) = { delete: "/v1/shelves/{shelf}" };
+}
+
+// 返回指定书架上的图书列表
+rpc ListBooks(ListBooksRequest) returns (ListBooksResponse) {
+    // 客户端示例：列出 ID 为 1 的书架上的所有图书
+    // cu
+}
+// 创建一本新图书。
+rpc CreateBook(CreateBookRequest) returns (Book) {
+    // Client example - 在第一个书架上创建一本新书:
+    // curl -d '{"author":"foo","title":"bar"}' http://DOMAIN_NAME/v1/shelves/1/books
+    option (google.api.http) = {
+        post: "/v1/shelves/{shelf}/books"
+        body: "book"
+    };
+}
+
+// // 返回特定的图书。
+// rpc GetBook(GetBookRequest) returns (Book) {
+//     // Client example - 获取第二个书架上的第一本图书:
+//     // curl http://DOMAIN_NAME/v1/shelves/2/books/1
+//     option (google.api.http) = { get: "/v1/shelves/{shelf}/books/{book}" };
+// }
+// rpc DeleteBook(DeleteBookRequest) returns (google.protobuf.Empty) {
+//     // Client example - 删除第一个书架上的第一本书:
+//     // curl -X DELETE http://DOMAIN_NAME/v1/shelves/1/books/1
+//     option (google.api.http) = { delete: "/v1/shelves/{shelf}/books/{book}" };
+// }
+}
+// 书架资源。
+message Shelf {
+    // 书架的唯一 id。
+    int64 id = 1;
+    // 书架上的主题(小说、诗歌等)。
+    string theme = 2;
+    // 书架的大小
+    int64 size = 3;
+}
+
+// 图书资源。
+message Book {
+    // 图书的唯一 id。
+    int64 id = 1;
+    // 图书的作者。
+    string author = 2;
+    // 书名
+    string title = 3;
+}
+// 调用 ListShelves 返回的响应消息。
+message ListShelvesResponse {
+    // 书店里的书架。
+    repeated Shelf shelves = 1;
+}
+
+// CreateShelf 方法的请求消息。
+message CreateShelfRequest {
+    // 要创建的书架数据
+    Shelf shelf = 1;
+}
+
+// GetShelf 方法的请求消息。
+message GetShelfRequest {
+    // 要检索的书架的ID。
+    int64 shelf = 1;
+}
+
+// DeleteShelf 方法的请求消息。
+message DeleteShelfRequest {
+    // 要删除的书架的ID
+    int64 shelf = 1;
+}
+// Request message for ListBooks method.
+message ListBooksRequest {
+    // ID of the shelf which books to list.
+    int64 shelf = 1;
+}
+
+// ListBooks 方法的请求消息。
+message ListBooksResponse {
+    // 书架上的图书。
+    repeated Book books = 1;
+}
+
+// CreateBook 方法的请求消息。
+message CreateBookRequest {
+    // 要在其上创建图书的书架的 ID。
+    int64 shelf = 1;
+    // 在书架上创建的图书数据。
+    Book book = 2;
+}
