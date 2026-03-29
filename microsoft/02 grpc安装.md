@@ -22,5 +22,13 @@ protoc-gen-go-grpc 1.6.1
 该插件会生成grpc相关代码
 ```
 ```
+一键安装所有插件
+go install \
+    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
+    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
+    google.golang.org/protobuf/cmd/protoc-gen-go \
+    google.golang.org/grpc/cmd/protoc-gen-go-grpc
+```
+```
 vscode上安装Protobuf VSC
 ```

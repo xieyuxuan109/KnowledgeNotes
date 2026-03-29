@@ -6,6 +6,8 @@ gRPC&gRPC-Gateaway小练习
 1.数据库
 2.proto
 3.业务逻辑
+  -3.1 数据库操作
+  -3.2 grpc逻辑
 ## proto文件
 pb/bookstore.proto
 ## 依赖安装
