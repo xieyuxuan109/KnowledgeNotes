@@ -4,8 +4,8 @@
 root@jasper:/home/jasper/harbor# cat /etc/docker/daemon.json 
 {
     "proxies":{
-        "http-proxy":"http://192.168.1.102:8118",
-        "https-proxy":"http://192.168.1.102:8118"
+        "http-proxy":"http://10.17.200.100:8118",
+        "https-proxy":"http://10.17.200.100:8118"
     },
   "insecure-registries" : ["192.168.1.221:81"]
 }
