@@ -5,9 +5,7 @@ sudo passwd root
 ```
 #### 编辑文件
 ```
-cd /etc/ssh
-ls
-vi sshd_config//找到PermitRootLogin 注释掉这一行
+sudo vim /etc/ssh/sshd_config//找到PermitRootLogin 注释掉这一行
 //添加PermitRootLogin yes 这一行
 ```
 #### 重启生效

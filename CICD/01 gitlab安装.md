@@ -11,6 +11,148 @@ docker volume create gitlab-runner-config
 ```
 ## docker compose
 ```
+version: "3.9"
+
+services:
+
+  # GitLab 服务
+  gitlab:
+    # GitLab CE 社区版镜像
+    image: nexus.dennis.com.cn:8082/gitlab/gitlab-ce:18.9.3-ce.0
+
+    # 容器名称
+    container_name: gitlab
+
+    # Docker 重启后自动启动
+    restart: always
+
+    # 容器内部主机名
+    hostname: gitlab.local
+
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        ## 基础访问配置
+
+        # GitLab Web访问地址
+        external_url 'http://10.17.220.221:81'
+
+        # Git SSH 克隆端口（宿主机映射2222）
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+
+        ###############################################################
+        ## 关闭非必要组件（降低资源占用）
+        ###############################################################
+
+        prometheus_monitoring['enable'] = false
+        alertmanager['enable'] = false
+        node_exporter['enable'] = false
+        postgres_exporter['enable'] = false
+        redis_exporter['enable'] = false
+        gitlab_exporter['enable'] = false
+
+        # Kubernetes Agent
+        gitlab_kas['enable'] = false
+
+        # Docker Registry
+        registry['enable'] = false
+
+        # GitLab Pages
+        gitlab_pages['enable'] = false
+
+        # 关闭邮件接收
+        gitlab_rails['incoming_email_enabled'] = false
+
+        ###############################################################
+        ## 性能优化（适用于2C4G左右服务器）
+        ###############################################################
+
+        # Sidekiq 最大并发
+        sidekiq['max_concurrency'] = 5
+
+        # 禁止内存自动Kill
+        sidekiq['memory_killer'] = false
+
+        # Puma Worker
+        puma['worker_processes'] = 1
+
+        # PostgreSQL缓存
+        postgresql['shared_buffers'] = '64MB'
+
+    ###############################################################
+    ## 端口映射
+    ###############################################################
+    ports:
+      # Web访问
+      - "81:81"
+
+      # Git SSH Clone
+      - "2222:22"
+
+    ###############################################################
+    ## 数据持久化
+    ###############################################################
+    volumes:
+      # GitLab配置
+      - /srv/gitlab/config:/etc/gitlab
+
+      # GitLab日志
+      - /srv/gitlab/logs:/var/log/gitlab
+
+      # GitLab数据
+      - /srv/gitlab/data:/var/opt/gitlab
+
+    ###############################################################
+    ## 共享内存
+    ###############################################################
+    shm_size: "512m"
+
+    ###############################################################
+    ## 网络
+    ###############################################################
+    networks:
+      - gitlab
+
+  #####################################################################
+  # GitLab Runner
+  gitlab-runner:
+    # GitLab Runner 官方镜像
+    image: nexus.dennis.com.cn:8082/gitlab/gitlab-runner:v18.9.0
+
+    # 容器名称
+    container_name: gitlab-runner
+
+    # 自动重启
+    restart: always
+
+    # 等待 GitLab 启动
+    depends_on:
+      - gitlab
+
+    ## 数据持久化
+    volumes:
+      # Runner配置文件
+      # 注册Runner后自动生成config.toml
+      - /srv/gitlab-runner/config:/etc/gitlab-runner
+
+      # Docker Socket
+      # Docker Executor必须挂载
+      # CI/CD运行时调用宿主机Docker
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    ## 环境变量
+    environment:
+      # Runner 默认使用 Docker Executor
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    ## 网络
+    networks:
+      - gitlab
+# Docker 网络
+networks:
+  gitlab:
+    driver: bridge
+```
+## 分别启动
+```
 root@jasper:/home/jasper/gitlab# cat docker-compose.yaml 
 version: '3'
 
@@ -86,6 +228,7 @@ Confirm password:
 Password successfully updated for user with username root.
 root@gitlab:/# 
 ```
+nexus.dennis.com.cn:8082/ubuntu:24.04
 ### 注册
 ```
 root@jasper:/home/jasper/gitlab# docker exec -it gitlab-runner bash                         

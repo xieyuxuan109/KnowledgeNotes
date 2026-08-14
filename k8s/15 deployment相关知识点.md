@@ -45,9 +45,9 @@ spec:
 
     spec:                  # pod 规格信息
       containers:          # pod 的容器
-        - image: nginx:1.7.9          # 镜像
+        - image:           # 镜像
           imagePullPolicy: IfNotPresent # 拉取策略
-          name: nginx                 # 容器名称
+          name: nexus.dennis.com.cn:8082/myimage:1.0.0                 # 容器名称
 
       restartPolicy: Always           # 重启策略
       terminationGracePeriodSeconds: 30 # 删除操作最大宽限时间
